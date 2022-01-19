@@ -21,7 +21,8 @@ namespace SignalR.Areas.Identity
                         context.Configuration.GetConnectionString("DBsignalRConnection")));
 
                 services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                    .AddEntityFrameworkStores<DBsignalR>();
+                .AddRoles<IdentityRole>()
+                .AddEntityFrameworkStores<DBsignalR>();
             });
         }
     }

@@ -6,22 +6,18 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using SignalR.Areas.Identity.Data;
+using SignalR.Models;
 
 namespace SignalR.Data
 {
     public class DBsignalR : IdentityDbContext<ApplicationUser>
     {
+        public DbSet<Group> groups { get; set; }
+        public DbSet<Message> messages { get; set; }
+
         public DBsignalR(DbContextOptions<DBsignalR> options)
             : base(options)
         {
-        }
-
-        protected override void OnModelCreating(ModelBuilder builder)
-        {
-            base.OnModelCreating(builder);
-            // Customize the ASP.NET Identity model and override the defaults if needed.
-            // For example, you can rename the ASP.NET Identity table names and more.
-            // Add your customizations after calling base.OnModelCreating(builder);
         }
     }
 }

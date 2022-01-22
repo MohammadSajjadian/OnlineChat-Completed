@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SignalR.Areas.Identity.Data;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -16,5 +17,9 @@ namespace SignalR.Models
         public int groupId { get; set; }
         [ForeignKey(nameof(groupId))]
         public Group group { get; set; }
+
+        public string userId { get; set; }
+        [ForeignKey(nameof(userId))]
+        public ApplicationUser applicationUser { get; set; }
     }
 }

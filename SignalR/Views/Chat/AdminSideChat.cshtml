@@ -1,0 +1,69 @@
+﻿
+@{
+    ViewData["Title"] = "AdminSideChat";
+}
+
+@model List<Message>
+@inject UserManager<ApplicationUser> userManager
+
+@{ ApplicationUser user = await userManager.FindByNameAsync(User.Identity.Name);}
+
+<ul id="messageList">
+    @foreach (var item in Model)
+    {
+        @if (user.Id == item.applicationUser.Id)
+        {
+            <li>You: @item.text</li>
+        }
+        else
+        {
+            <li>@($"{item.applicationUser.nameFamily} Says: {item.text}")</li>
+        }
+    }
+</ul>
+
+<div class="container">
+    <div class="form-group">
+        <label>پیغام:</label>
+        <textarea class="form-control" id="message" required></textarea>
+    </div>
+    <div>
+        <input class="btn btn-outline-primary" type="button" id="sendButton" value="ارسال" />
+    </div>
+</div>
+
+<script>
+    var connection = new signalR.HubConnectionBuilder().withUrl("/chathub").build();
+
+    connection.on("ReceiveMessage", (currentUserId, nameFamily, message) => {
+        if (currentUserId == "@user.Id") {
+            var rec_msg = "You: " + message;
+        }
+        else {
+            var rec_msg = nameFamily + " Says: " + message;
+        }
+
+        var li = document.createElement("li");
+        li.textContent = rec_msg;
+        document.getElementById("messageList").appendChild(li);
+    })
+
+    connection.start().then(result => {
+        connection.invoke("AddToGroup", "@ViewBag.userId").catch(err => console.error(err.toString()))
+    });
+
+    document.getElementById("sendButton").addEventListener("click", event => {
+
+        if (document.getElementById("message").value != "") {
+
+            var clientId = "@user.Id";
+            var message = document.getElementById("message").value;
+
+            connection.invoke("SendMessageToGroup", "@ViewBag.userId", clientId, message).catch(err => console.error(err.toString()));
+
+            document.getElementById("message").value = "";
+
+            event.preventDefault();
+        }
+    })
+</script>

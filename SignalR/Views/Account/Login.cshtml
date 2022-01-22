@@ -1,0 +1,21 @@
+﻿
+@{
+    ViewData["Title"] = "Login";
+}
+
+@model LoginViewModel
+
+<form asp-action="LoginConfirm">
+    <div class="form-group">
+        <label>نام کاربری</label>
+        <input asp-for="userName" type="text" class="form-control">
+        <span asp-validation-for="userName"></span>
+    </div>
+    
+    <div class="form-group">
+        <label>رمز عبور</label>
+        <input asp-for="password" type="password" class="form-control">
+        <span asp-validation-for="password"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">ورود</button>
+</form>

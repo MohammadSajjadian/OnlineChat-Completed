@@ -12,5 +12,6 @@ namespace SignalR.Areas.Identity.Data
         public string nameFamily { get; set; }
 
         public ICollection<Group> groups { get; set; }
+        public ICollection<Message> messages { get; set; }
     }
 }

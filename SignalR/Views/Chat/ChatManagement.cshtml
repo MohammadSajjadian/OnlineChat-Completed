@@ -1,0 +1,43 @@
+﻿
+@{
+    ViewData["Title"] = "ManageChats";
+}
+
+@model List<Group>
+
+@{PersianCalendar persian = new();}
+
+@if (Model.Count != 0)
+{
+    <h4>جهت ادامه گفت و گو روی نام کاربر کلیک کنید.</h4>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">نام کاربر</th>
+                <th scope="col">آخرین پیغام</th>
+                <th scope="col">زمان</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{ int i = 1;}
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <th scope="row">@(i++)</th>
+                    <td><a asp-action="AdminSideChat" asp-route-userId="@item.applicationUser.Id">@item.applicationUser.nameFamily</a></td>
+                    <td>@item.messages.Last().text</td>
+                    <td>
+                        @($"{persian.GetYear(item.messages.Last().time)}/{persian.GetMonth(item.messages.Last().time)}/{persian.GetDayOfMonth(item.messages.Last().time)}" +
+                        $" - {persian.GetHour(item.messages.Last().time)}:{persian.GetMinute(item.messages.Last().time)}")
+                    </td>
+                </tr>
+                i++;
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <h3>!پیغامی جهت نمایش وجود ندارد</h3>
+}

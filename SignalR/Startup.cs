@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SignalR.Areas.Identity.Data;
+using SignalR.Chat;
 using SignalR.Data;
 using System;
 using System.Collections.Generic;
@@ -28,6 +29,7 @@ namespace SignalR
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            services.AddSignalR();
 
             services.AddAuthorization(x =>
             {
@@ -36,8 +38,8 @@ namespace SignalR
 
             services.ConfigureApplicationCookie(x =>
             {
-                x.LoginPath = "/Login/Account";
-                x.AccessDeniedPath = "/Login/Account";
+                x.LoginPath = "/Account/Login";
+                x.AccessDeniedPath = "/Account/Login";
             });
 
             services.AddDbContext<DBsignalR>(x =>
@@ -64,14 +66,16 @@ namespace SignalR
 
             app.UseRouting();
 
-            app.UseAuthorization();
             app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+                endpoints.MapHub<ChatHub>("/chathub");
             });
 
             Init(userManager, roleManager).Wait();
@@ -96,7 +100,7 @@ namespace SignalR
                     nameFamily = "admin",
                     EmailConfirmed = true
                 };
-                await userManager.CreateAsync(user);
+                await userManager.CreateAsync(user, "pP_0987");
             }
 
             if (await userManager.IsInRoleAsync(user, "admin") == false)
